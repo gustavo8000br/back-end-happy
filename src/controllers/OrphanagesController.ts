@@ -1,51 +1,86 @@
-import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-import Orphanage from '../models/Orphanage'
+import { Request, Response } from "express";
+import { getRepository } from "typeorm";
+import orphanageView from "../views/orphanages_view";
+import * as Yup from "yup";
 
-export default { 
-    async index (req: Request, res: Response) {
-        const orphanageRepository = getRepository(Orphanage);
+import Orphanage from "../models/Orphanage";
 
-        const orphanages = await orphanageRepository.find();
+export default {
+  async index(req: Request, res: Response) {
+    const orphanageRepository = getRepository(Orphanage);
 
-        return res.json(orphanages);
-    },
+    const orphanages = await orphanageRepository.find({
+      relations: ["images"],
+    });
 
-    async show (req: Request, res: Response) {
-        const { id } = req.params;
+    return res.json(orphanageView.renderMany(orphanages));
+  },
 
-        const orphanageRepository = getRepository(Orphanage);
+  async show(req: Request, res: Response) {
+    const { id } = req.params;
 
-        const orphanage = await orphanageRepository.findOneOrFail(id);
+    const orphanageRepository = getRepository(Orphanage);
 
-        return res.json(orphanage);
-    },
+    const orphanage = await orphanageRepository.findOneOrFail(id, {
+      relations: ["images"],
+    });
 
-    async create(req: Request, res: Response) {
-        const {
-            name,
-            latitude,
-            longitude,
-            about,
-            instructions,
-            opening_hours,
-            open_on_weekends
-        } = req.body;
-    
-        const orphanageRepository = getRepository(Orphanage);
-    
-        const orphanage = orphanageRepository.create({
-            name,
-            latitude,
-            longitude,
-            about,
-            instructions,
-            opening_hours,
-            open_on_weekends,
-        });
-    
-        await orphanageRepository.save(orphanage);
-    
-        return res.status(201).json(orphanage);
-    }
+    return res.json(orphanageView.render(orphanage));
+  },
+
+  async create(req: Request, res: Response) {
+    const {
+      name,
+      latitude,
+      longitude,
+      about,
+      instructions,
+      opening_hours,
+      open_on_weekends,
+    } = req.body;
+
+    const orphanageRepository = getRepository(Orphanage);
+
+    const requestImages = req.files as Express.Multer.File[];
+
+    const images = requestImages.map((image) => {
+      return { path: image.filename };
+    });
+
+    const data = {
+      name,
+      latitude,
+      longitude,
+      about,
+      instructions,
+      opening_hours,
+      open_on_weekends,
+      images,
+    };
+
+    const schema = Yup.object().shape({
+      name: Yup.string().required('Nome obrigatório'),
+      latitude: Yup.number().required('Latitude obrigatório'),
+      longitude: Yup.number().required('Longitude obrigatório'),
+      about: Yup.string().required('Sobre obrigatório').max(300),
+      instructions: Yup.string().required('Instruções obrigatório'),
+      opening_hours: Yup.string().required('Horário de funcionamento obrigatório'),
+      open_on_weekends: Yup.boolean().required('Aberto nos finais de semana obrigatório'),
+      images: Yup.array(
+        Yup.object().shape({
+          path: Yup.string().required()
+        })
+      )
+    });
+
+    await schema.validate(data, {
+      abortEarly: false,
+    });
+
+    const orphanage = orphanageRepository.create(data);
+
+    await orphanageRepository.save(orphanage);
+
+    return res.status(201).json(orphanage);
+  },
 };
