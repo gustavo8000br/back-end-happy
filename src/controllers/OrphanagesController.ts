@@ -34,6 +34,7 @@ export default {
       latitude,
       longitude,
       about,
+      telephony,
       instructions,
       opening_hours,
       open_on_weekends,
@@ -52,9 +53,10 @@ export default {
       latitude,
       longitude,
       about,
+      telephony,
       instructions,
       opening_hours,
-      open_on_weekends,
+      open_on_weekends: open_on_weekends === 'true',
       images,
     };
 
@@ -64,11 +66,12 @@ export default {
       longitude: Yup.number().required('Longitude obrigatório'),
       about: Yup.string().required('Sobre obrigatório').max(300),
       instructions: Yup.string().required('Instruções obrigatório'),
+      telephony: Yup.number(),
       opening_hours: Yup.string().required('Horário de funcionamento obrigatório'),
       open_on_weekends: Yup.boolean().required('Aberto nos finais de semana obrigatório'),
       images: Yup.array(
         Yup.object().shape({
-          path: Yup.string().required()
+          path: Yup.string().required('Ao menos 1 (Uma) imagem e requerida')
         })
       )
     });

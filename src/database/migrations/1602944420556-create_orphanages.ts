@@ -20,12 +20,6 @@ export class createOrphanages1602944420556 implements MigrationInterface {
             type: "varchar",
           },
           {
-            name: "telephony",
-            type: "decimal",
-            scale: 13,
-            precision: 2,
-          },
-          {
             name: "latitude",
             type: "decimal",
             scale: 10,
@@ -40,6 +34,12 @@ export class createOrphanages1602944420556 implements MigrationInterface {
           {
             name: "about",
             type: "text",
+          },
+          {
+            name: "telephony",
+            type: "decimal",
+            scale: 13,
+            precision: 2,
           },
           {
             name: "instructions",
