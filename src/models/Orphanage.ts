@@ -19,7 +19,7 @@ export default class Orphanage {
     about: string;
 
     @Column()
-    telephony: number;
+    telephone: number;
 
     @Column()
     instructions: string;
