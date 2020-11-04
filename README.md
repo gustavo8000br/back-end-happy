@@ -19,7 +19,7 @@ ___
 
     ```.env
     PORT=3333
-    HOST=localhost
+    PUBLIC_URL=localhost
     ```
 
 - Execute no terminal, na raiz do projeto:

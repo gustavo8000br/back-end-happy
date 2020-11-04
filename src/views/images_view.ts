@@ -1,14 +1,14 @@
 import Image from '../models/Image'
 require('dotenv').config()
 
-let PORT = process.env["PORT"];
-let HOST = process.env["HOST"];
+const PORT = parseInt(process.env.PORT || "3333", 10)
+const PUBLIC_URL = process.env.PUBLIC_URL || `localhost`;
 
 export default {
     render(image: Image) {
         return {
             id: image.id,
-            url: `http://${HOST}:${PORT}/uploads/${image.path}`
+            url: `http://${PUBLIC_URL}:${PORT}/uploads/${image.path}`
         };
     },
     renderMany(images: Image[]) {
