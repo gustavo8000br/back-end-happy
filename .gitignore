@@ -89,3 +89,6 @@ typings/
 
 # Inside Upload Folder
 uploads/*
+
+# Dev SQLite Database
+src/database/database-dev.sqlite
