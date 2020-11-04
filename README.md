@@ -3,11 +3,11 @@
 ## Repositorios do Projeto
 
 - [Frontend](https://github.com/gustavo8000br/happy/)
-- [Backend - (Você está aqui)](https://github.com/gustavo8000br/backend-happy)
+- [Backend](https://github.com/gustavo8000br/backend-happy)
 
 ___
 
-## Requesitos do sistema
+## Requisitos do sistema
 
 - Linux/MacOS
 
